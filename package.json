@@ -13,6 +13,7 @@
     "commitmsg": "commitlint --env GIT_PARAMS --config scripts/commit.js",
     "test": "npm run build && jest"
   },
+  "repository": "https://github.com/appletjs/applet.git",
   "keywords": [
     "promise",
     "middleware",
@@ -22,6 +23,10 @@
   ],
   "author": "Maofeng Zhang <japplet@163.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/appletjs/applet/issues"
+  },
+  "homepage": "https://github.com/appletjs/applet#readme",
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
