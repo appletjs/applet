@@ -6,6 +6,7 @@
   "jsnext:main": "src/applet.js",
   "module": "src/applet.js",
   "browser": "browser.js",
+  "typings": "index.d.ts",
   "scripts": {
     "build": "rollup --config scripts/build.js",
     "commitmsg": "commitlint --env GIT_PARAMS --config scripts/commit.js"
