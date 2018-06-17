@@ -1,6 +1,6 @@
 {
   "name": "applet",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "The middleware framework on promise",
   "main": "index.js",
   "jsnext:main": "src/applet.js",
@@ -11,6 +11,7 @@
     "build": "rollup --config scripts/build.js",
     "docs": "node scripts/docs.js",
     "commitmsg": "commitlint --env GIT_PARAMS --config scripts/commit.js",
+    "prepublishOnly": "npm run test && npm run docs",
     "test": "npm run build && jest"
   },
   "repository": "https://github.com/appletjs/applet.git",

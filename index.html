@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta name="charset" content="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="keywords" content="promise middleware framework async applet">
+  <meta name="description" content="The middleware framework on promise"/>
+  <meta name="author" content="Maofeng Zhang"/>
+  <title>Applet - 中间件开发框架</title>
+  <style>
+    /***** normalize *****/
+    html{height:100%;line-height:1.6;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+    body{height:100%;margin:0;padding:0;color:#33333d;background-color:white}
+    section,article,blockquote,header,footer{display:block}
+    hr{box-sizing:border-box;height:0;overflow:visible}
+    b,strong{font-weight:bolder}
+    img{border-style:none}
+    svg:not(:root){overflow: hidden}
+    blockquote {padding:1rem 2rem;margin:2rem 0;border-left:4px solid #ddd;background-color:#f8f8f8;color:#777}
+
+    body {font:16px/1.5 Helvetica,Arial,Verdana,sans-serif;overflow-y:scroll;overflow-x:hidden}
+    h1,h2,h3,h4,h5,h6{margin-top:1em;margin-bottom:1em;font-weight:bold;line-height:1.4}
+    h1{font-size:2.25rem;margin:0.67rem 0}
+    h2{font-size:1.75rem;border-bottom:1px solid #eee;line-height:1.225;padding-bottom:.3rem;}
+    h3{font-size:1.5rem;line-height: 1.43}
+    h4{font-size:1.25rem}
+    h5{font-size:1rem}
+    h6{font-size:1rem;color:#777}
+    p{margin-top:0;margin-bottom:1rem}
+    del{text-decoration:line-through}
+    i,em{font-style:italic}
+
+    a {background-color:transparent;text-decoration:none}
+    a:hover {text-decoration:underline}
+    a.code-link:hover{color:#e96900}/* code label */
+
+    .heading{position:relative;display:block}
+    .heading a{position:absolute;left:-1.5rem;color:transparent;display:block;width:1.5rem}
+    .heading:hover a{color:inherit;opacity:.5}
+    .heading a:hover{text-decoration:none;opacity:1}
+
+
+    /***** layout *****/
+    section,header,footer{min-height:50%}
+    header{display:table;width:100%;height:100%}
+    header>article{display:table-cell;vertical-align:middle;text-align:center}
+    section,footer{padding:150px 100px;text-align:center}
+    section:nth-child(2n){background:#fdfdfd;box-shadow:inset 0 1px 0 0 white}
+    section,footer{border-top:1px solid #eee}
+    article {margin:0 auto;max-width:750px;text-align:left}
+    article *:first-child{margin-top:0}
+    article *:last-child{margin-bottom:0}
+
+    /***** code *****/
+    pre,code{font-family:Monaco,Courier,monospace;-webkit-font-smoothing:initial;-moz-osx-font-smoothing:initial}
+    pre{font-size:1rem}
+    pre code {font-size:1rem;line-height:1.5;border:1px solid #e1e1e8}
+
+    code:not([class^="language-"]) {
+      background-color:#f8f8f8;color:#e96900;padding:3px 5px;margin:0 2px;
+      font-size:.8rem;border-radius:2px;white-space:nowrap;
+    }
+
+    /***** navigation *****/
+    .nav{position:fixed;top:1rem;right:2rem;z-index:100;}
+    .nav-anchor{position:relative;z-index:2;padding:.8rem;border:1px solid transparent;cursor:pointer}
+    .nav-anchor span{display:block;width:1rem;height:4px;margin:2px;background-color:#333}
+    .nav-menu{
+      z-index:1;position:absolute;display:none;top:100%;right:0;margin-top:-1px;
+      border:1px solid #efefef;padding:1.5rem;background:rgba(255,255,255,.95);
+      box-shadow:0 1px 3px 0 #eee
+    }
+    .nav-menu a{display:block;white-space:nowrap;padding:3px 0;font-size:.875rem}
+    .nav-menu-divider{border:none;height:.6rem}
+    .nav:hover .nav-anchor{border-color:#efefef;border-bottom-color:#fff}
+    .nav:hover .nav-menu{display:block}
+
+    /***** lineNumber *****/
+    pre{position:relative;overflow:hidden}
+    code.has-numbering{position:relative;padding-left: 2.5rem}
+    .pre-numbering{
+      position:absolute;top:1px;left:1px;background-color:#f7f7f9;color:#aaa;
+      text-align:right;width:1.5rem;margin:0;padding:.5rem 2px .5rem 6px;
+      border-right:1px solid #e1e1e8
+    }
+    .pre-numbering>li{height:1.5rem;line-height:1.5rem;font-size:.8rem;list-style:none;}
+
+    /**** highlightjs ****/
+    .hljs,[class^="language-"]{display:block;overflow-x:auto;padding:.5rem;background:#F0F0F0}
+    .hljs,.hljs-subst{color:#444}
+    .hljs-keyword,.hljs-attribute,.hljs-selector-tag,.hljs-meta-keyword,.hljs-doctag,.hljs-name{font-weight:bold}
+    .hljs-type,.hljs-string,.hljs-number,.hljs-selector-id,.hljs-selector-class,.hljs-template-tag{color:#880000}
+    .hljs-title,.hljs-section{color:#880000;font-weight:bold}
+    .hljs-regexp,.hljs-template-variable{color:#BC6060}
+    .hljs-literal {color:#78A960}
+    .hljs-code,.hljs-addition{color:#397300}
+    .hljs-meta {color:#1f7199}
+    .hljs-meta-string{color:#4d99bf}
+    .hljs-emphasis{font-style:italic}
+    .hljs-strong{font-weight:bold}
+    .hljs-comment{color:#888888}
+    .hljs-quote,.hljs-variable{color:#008000}
+    .hljs-keyword,.hljs-selector-tag,.hljs-built_in,.hljs-name,.hljs-tag{color:#00f}
+    .hljs-deletion,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-params{color:#2b91af}
+    .hljs-doctag{color:#808080}
+    .hljs-attr{color:#f00}
+    .hljs-symbol,.hljs-bullet,.hljs-link {color:#00b0e8}
+  </style>
+</head>
+<body>
+<div class="nav">
+  <div class="nav-anchor">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="nav-menu">
+    <a href="#introduction">简介（Introduction）</a>
+    <a href="#installation">安装（Installation）</a>
+    <a href="#applet">应用程序（Applet）</a>
+    <a href="#middleware">中间件（Middleware）</a>
+    <a href="#context">上下文（Context）</a>
+    <a href="#exception">异常处理（Exception）</a>
+    <a href="#license">授权协议（License）</a>
+    <hr class="nav-menu-divider">
+    <a href="#">返回顶部（Go to top）</a>
+  </nav>
+</div>
+
+<header>
+  <article>
+    <h1 align="center">
+    
+    <p><img src="applet.svg" alt="applet"></p>
+    </h1>
+    
+    <p><a href="https://www.npmjs.com/package/applet"><img src="https://img.shields.io/npm/v/applet.svg?style=flat-square" alt="version"></a>
+    <a href="https://www.npmjs.com/package/applet"><img src="https://img.shields.io/npm/dt/applet.svg?style=flat-square" alt="downloads"></a>
+    <a href="https://www.jsdelivr.com/package/npm/applet"><img src="https://data.jsdelivr.com/v1/package/npm/applet/badge" alt="cdn"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/npm/l/applet.svg?style=flat-square" alt="license"></a></p>
+    <p>The middleware framework on promise</p>
+  </article>
+</header>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="introduction"><a href="#introduction">#</a>简介（Introduction）</h2>
+    <p><code>Applet</code> 参考并使用了 <a href="https://koajs.com/"><code>Koa框架</code></a> 核心部分，是一个体积极小且极具表现力的中间件框架。
+    它没有捆绑任何中间件，也不依赖第三方包，可以运行在<strong>Node.js环境下</strong>和<strong>浏览器端</strong>。
+    它的中间件之间按照编码顺序在栈内依次执行，允许我们执行操作并向下传递请求（downstream），之后过滤并逆序返回响应（upstream）。</p>
+    <h4 class="heading">运行环境</h4>
+    <p>理论上，符合下面任一条件即可：</p>
+    <ul>
+    <li>在 Node.js 环境下，Applet 依赖 <strong>node v7.6.0</strong> 或 ES2015及更高版本和 async 方法支持；</li>
+    <li>在浏览器端则需要通过其它工具转码 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"><code>async 函数</code></a>，或者使用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"><code>Promise</code></a>。</li>
+    </ul>
+    <blockquote>
+    <p>推荐使用转码工具（如：<a href="https://buble.surge.sh/guide/">buble</a>、<a href="http://babeljs.io/">babel</a>）配合打包工具（如：<a href="https://rollupjs.org">rollup</a>、<a href="https://parceljs.org/">parcel</a>、<a href="https://webpack.js.org/">webpack</a>）转换 <code>async/await</code>。</p>
+    </blockquote>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="installation"><a href="#installation">#</a>安装（Installation）</h2>
+    <p>Node.js 环境下或用于集成到项目可以使用 <a href="https://docs.npmjs.com/getting-started/what-is-npm"><code>npm</code></a> 或 <a href="https://yarnpkg.com/"><code>yarn</code></a> 安装：</p>
+    <h4 class="heading">npm</h4>
+    <pre><code class="language-bash"><span class="hljs-comment"># 安装最新版本</span>
+$ npm install applet</code></pre>
+    <h4 class="heading">yarn</h4>
+    <pre><code class="language-bash"><span class="hljs-comment"># 安装最新版本</span>
+$ yarn add applet</code></pre>
+    <h4 class="heading">CDN</h4>
+    <p>浏览器环境使用包目录下的 <code>browser.js</code> 文件，或者使用 CDN ：</p>
+    <pre><code class="language-html"><span class="hljs-comment">&lt;!-- 推荐链接到一个你可以手动更新的指定版本号 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//cdn.jsdelivr.net/npm/applet@0.0.7/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/applet@0.0.7/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- 或者由CDN自动选择（最新版本可能有所延迟） --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//cdn.jsdelivr.net/npm/applet"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/applet"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+    <p>你可以在 <a href="https://cdn.jsdelivr.net/npm/applet/">cdn.jsdelivr.net/npm/applet</a> 浏览 NPM 包的源代码，
+    或者在 <a href="https://github.com/appletjs/applet/tree/dev">GitHub仓库</a> 浏览开发版源代码。</p>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="applet"><a href="#applet">#</a>应用程序（Applet）</h2>
+    <p><strong>Applet</strong> 应用程序是一个包含一组中间件函数的对象，它是按照类似堆栈的方式组织和执行的。
+    因为使用了 Koa 的核心概念，所以关键的设计点与Koa保持一致：在其低级中间件层中提供高级“语法糖”。
+    这提高了互操作性，稳健性，并使书写中间件更加愉快。</p>
+    <h4 class="heading">示例：必修的 hello world 应用</h4>
+    <pre><code class="language-js"><span class="hljs-keyword">const</span> Applet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'applet'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
+
+<span class="hljs-comment">// handle 执行结果返回一个 promise 实例</span>
+<span class="hljs-keyword">const</span> handle = app.callback();
+
+<span class="hljs-comment">// 使用一个普通函数作为中间件</span>
+app.use(<span class="hljs-function">(<span class="hljs-params">ctx, next</span>) =&gt;</span> {
+  ctx.hello = <span class="hljs-string">'hello'</span>;
+  <span class="hljs-keyword">return</span> next();
+});
+
+<span class="hljs-comment">// 使用 async 函数作中间件</span>
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  ctx.hello += <span class="hljs-string">' world!'</span>;
+  <span class="hljs-keyword">await</span> next();
+});
+
+handle(<span class="hljs-function">(<span class="hljs-params">ctx</span>) =&gt;</span> {
+ <span class="hljs-built_in">console</span>.log(ctx.hello);
+  <span class="hljs-comment">// =&gt; 'hello world!'</span>
+});</code></pre>
+    <h4 class="heading">级联</h4>
+    <p><strong>Applet</strong> 中间件以更传统的方式级联，你可能习惯使用类似的工具（避免 Node.js 的回调地狱）,
+    所以通过使用 <strong>async/await</strong> 功能，我们可以实现 “真实” 的中间件。通过一系列功能直接传递控制，
+    直到一个返回，Applet 调用“下游”，然后控制流回“上游”。</p>
+    <p>下面以 “Hello World” 的响应作为示例，首先请求流通过 x-response-time 和 logging 中间件来请求何时开始，
+    然后继续移交控制给 response 中间件。当一个中间件调用 <code>next()</code> 则该函数暂停并将控制传递给定义的下一个中间件。
+    当在下游没有更多的中间件执行后，堆栈将展开并且每个中间件恢复执行其上游行为。</p>
+    <pre><code class="language-js"><span class="hljs-comment">// 级联示例</span>
+
+<span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<span class="hljs-keyword">const</span> Applet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'applet'</span>);
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
+
+http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-comment">// 每次 http 请求，上下文数据不一样，所以在这里调用 app.callback;</span>
+  <span class="hljs-comment">// 当然，你还可以使用其它方式注入上下文，具体实现方式参考后面的【Context】。</span>
+  <span class="hljs-keyword">const</span> handle = app.callback({
+    req,
+    res,
+    <span class="hljs-attr">body</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">headers</span>: {}
+  });
+
+  <span class="hljs-comment">// 为什么需要这个呢, 请参考【中间件说明】</span>
+  <span class="hljs-keyword">const</span> done = <span class="hljs-function"><span class="hljs-params">ctx</span> =&gt;</span> ctx;
+
+  <span class="hljs-keyword">const</span> send = <span class="hljs-function">(<span class="hljs-params">ctx</span>) =&gt;</span> {
+    res.writeHead(ctx.status || <span class="hljs-number">200</span>, ctx.headers);
+    res.write(ctx.body);
+    res.end();
+  };
+
+  handle(done).then(send).catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+    send({
+      <span class="hljs-attr">status</span>: <span class="hljs-number">500</span>,
+      <span class="hljs-attr">headers</span>: {<span class="hljs-string">'Context-Type'</span>: <span class="hljs-string">'text/plain;charset=UTF-8'</span>},
+      <span class="hljs-attr">body</span>: e.stack || e.message
+    });
+  });
+})
+.listen(<span class="hljs-number">3000</span>);
+
+<span class="hljs-comment">// x-response-time</span>
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
+  ctx.headers[<span class="hljs-string">'X-Response-Time'</span>] = <span class="hljs-string">`<span class="hljs-subst">${ms}</span>ms`</span>;
+});
+
+<span class="hljs-comment">// logger</span>
+app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${ctx.method}</span> <span class="hljs-subst">${ctx.url}</span> - <span class="hljs-subst">${ms}</span>`</span>);
+});
+
+<span class="hljs-comment">// response</span>
+app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
+  ctx.body = <span class="hljs-string">'Hello World'</span>;
+});</code></pre>
+    <h4 class="heading" id="new-applet"><a href="#new-applet">#</a>new Applet([silent=false[, keys=&#39;env silent&#39;]])</h4>
+    <p>初始化一个 Applet 应用，参数可选：</p>
+    <ul>
+    <li><code>{boolean} silent</code> 静默处理错误。</li>
+    <li><code>{string | Array&lt;string&gt;} keys</code> 上下文环境的属性名称。</li>
+    </ul>
+    <h4 class="heading" id="app-use"><a href="#app-use">#</a>app.use(...fns)</h4>
+    <p>注册中间件到 applet 应用上，然后<strong>返回当前Applet应用实例</strong>。
+    参阅 <a href="#middleware">Middleware</a> 获取更多信息.</p>
+    <ul>
+    <li><code>{Array&lt;Function&gt;} fns</code> 中间件列表。</li>
+    </ul>
+    <blockquote>
+    <p>实际上，同时注册的多个中间件会被组合（compose）成一个中间件注册到 Applet 应用上。</p>
+    </blockquote>
+    <h4 class="heading" id="app-onerror"><a href="#app-onerror">#</a>app.onerror(err)</h4>
+    <p>默认错误处理方式。</p>
+    <ul>
+    <li><code>{Error | *} err</code> 被处理的错误。</li>
+    </ul>
+    <blockquote>
+    <p>如果参数 <code>err</code> 不是 <code>Error</code> 的实例，则或触发 <code>TypeError</code> 异常，该异常不会被处理，会导致 Applet 应用立即退出。</p>
+    </blockquote>
+    <h4 class="heading">app.callback([context])</h4>
+    <p>将Applet应用转换成可以执行中间件的<strong><code>handle函数</code></strong>，
+    该函数可以接收一个<strong><code>done函数</code></strong>来获取最终的<strong><code>handle函数运行时上下文</code></strong>数据。
+    参阅 <a href="#context">Context</a> 获取更多信息。</p>
+    <ul>
+    <li><code>{Object | Function} context</code> 注入到handle函数运行时上下文内给中间件使用的数据。</li>
+    </ul>
+    <blockquote>
+    <ul>
+    <li><strong>handle函数</strong>，返回值是一个 Promise 实例。</li>
+    <li><strong>done函数</strong>，接收的第一个参数是handle函数运行时上下文。</li>
+    </ul>
+    </blockquote>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="middleware"><a href="#middleware">#</a>中间件（Middleware）</h2>
+    <p>Applet 是一个中间件框架，可以采用两种不同的方法来实现中间件：</p>
+    <ul>
+    <li>async function</li>
+    <li>common function</li>
+    </ul>
+    <p>以下是使用两种不同方法实现一个日志中间件的示例：</p>
+    <h4 class="heading">示例：<em>async</em> function (node v7.6+)</h4>
+    <pre><code class="language-js">app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
+  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
+  <span class="hljs-keyword">await</span> next();
+  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Take <span class="hljs-subst">${ms}</span>ms`</span>);
+});</code></pre>
+    <h4 class="heading">示例：Common function</h4>
+    <pre><code class="language-js">app.use(<span class="hljs-function">(<span class="hljs-params">ctx, next</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();
+  <span class="hljs-keyword">return</span> next().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Take <span class="hljs-subst">${ms}</span>ms`</span>);
+  });
+});</code></pre>
+    <blockquote>
+    <p>中间件通常带有两个参数 <code>(ctx, next)</code>, <code>ctx</code> 是一个<strong>handle函数运行时上下文（context）</strong>，
+    <code>next</code> 是调用执行下游中间件的函数。在代码执行完成后通过 <strong>then</strong> 方法返回一个 <strong>Promise</strong>。</p>
+    </blockquote>
+    <h4 class="heading">分组中间件</h4>
+    <p>通过 <code>app.use(...fns)</code> 注册的一系列中间件（传递了多个参数），将转换成<strong>组合中间件</strong>被注册到 Applet 应用上。
+    需要注意的是，当<strong>组合中间件</strong>中某一个中间件发生了异常或未调用<code>next函数</code>，则会跳过组合中尚未被执行的中间件（即不会被执行）。</p>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="context"><a href="#context">#</a>上下文（Context）</h2>
+    <p>上下文分为 <strong>Applet应用上下文</strong> 和 <strong>handle函数运行时上下文</strong>。</p>
+    <p>每个中间件都接收一个纯对象 <code>Object</code>，正常情况下，该对象初始化状态仅仅包含了 Applet 实例的下面两个简单配置为属性。
+    <code>ctx</code> 通常用作上下文对象的参数名称。</p>
+    <ul>
+    <li><strong>env</strong> - 运行环境，默认值为 <code>(process || self).env.NODE_ENV || &#39;development&#39;</code>;</li>
+    <li><strong>silent</strong> - 对错误处理使用静默模式。</li>
+    </ul>
+    <blockquote>
+    <p>正常情况下，在运行 <strong>handle函数</strong> 时中修改 Applet 应用的 <code>slient</code>、<code>env</code> 属性，
+    是无法作用到运行时上下文，除非通过自定义的<strong>handle函数运行时上下文</strong>建立响应式。</p>
+    </blockquote>
+    <h4 class="heading">执行前（执行时）注入数据</h4>
+    <p>在调用 <strong><code>app.callback(data)</code></strong> 产生 <strong><code>handle函数</code></strong> 时，可以将你的数据注入到执行上下文；
+    但是在 <strong>handle函数</strong> 被执行时，被注入的数据有可能被中间件修改。</p>
+    <pre><code class="language-js">app.callback({
+  <span class="hljs-comment">// 被注入到handle函数执行上下文的数据</span>
+  foo: <span class="hljs-string">'bar'</span>
+});
+
+<span class="hljs-comment">// 其实也可以接受一个函数，由函数来注入数据</span>
+<span class="hljs-comment">// app.callback(function(ctx) {</span>
+<span class="hljs-comment">//   ctx.foo = 'bar';</span>
+<span class="hljs-comment">//   return ctx;</span>
+<span class="hljs-comment">// });</span>
+
+app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ctx, next</span>) </span>{
+  <span class="hljs-comment">// 在此修改handle函数执行上下文的数据，那么</span>
+  <span class="hljs-comment">// 后面的中间件访问到的 foo 的值是 'bazz'；</span>
+  <span class="hljs-comment">// 当然，你可以在其它中间件中修改回来或改成其它值。</span>
+  ctx.foo = <span class="hljs-string">'bazz'</span>;
+
+  <span class="hljs-comment">// 这是在调用 app.callback 是未被指定的，</span>
+  <span class="hljs-comment">// 是执行时注入的数据。</span>
+  ctx.fruit = <span class="hljs-string">'banana'</span>;
+
+  <span class="hljs-keyword">await</span> next();
+});</code></pre>
+    <h4 class="heading">自定义上下文</h4>
+    <p>同样，通过<strong><code>app.callback(fn)</code></strong>实现自定义：</p>
+    <pre><code class="language-js">app.callback(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ctx</span>) </span>{
+  <span class="hljs-keyword">const</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+
+  <span class="hljs-comment">// 将比较重要的两个handle函数执行时上下文</span>
+  <span class="hljs-comment">// 绑定到 xhr 实例对象上，当然，我们也可以不需要这么做。</span>
+  xhr.silent = ctx.silent;
+  xhr.env = ctx.env;
+
+  <span class="hljs-comment">// ctx 是 Applet 应用产生的执行上下文对象，可以忽略它。</span>
+  <span class="hljs-comment">// 我们通过返回 XMLHttpRequest 实例，</span>
+  <span class="hljs-comment">// 使用它作为执行上下文。</span>
+  <span class="hljs-keyword">return</span> xhr;
+});</code></pre>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading">事件触发接口（EventEmitter）</h2>
+    <p>Applet应用预留了三个事件触发接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式，具体情况请查看【异常】。</p>
+    <ul>
+    <li>listeners(event) 返回事件侦听器列表<ul>
+    <li><code>{string|symbol} event</code> 事件名称</li>
+    </ul>
+    </li>
+    </ul>
+    <ul>
+    <li>on(event, listener) =&gt; void): this` 添加侦听器<ul>
+    <li><code>{string|symbol} event</code> 事件名称</li>
+    <li><code>{Function} listener</code> 被添加的侦听器</li>
+    </ul>
+    </li>
+    </ul>
+    <ul>
+    <li>emit(event, ...args): boolean 触发事件，返回值表示是事件否被触发<ul>
+    <li><code>{string|symbol} event</code> 事件名称</li>
+    <li><code>{any[]} args</code> 传递个侦听器的参数列表</li>
+    </ul>
+    </li>
+    </ul>
+    <blockquote>
+    <p>上述接口是完全根据 Node.js 的 events 模块的接口设计的。 </p>
+    </blockquote>
+    <h4 class="heading">示例：Node.js 环境下</h4>
+    <pre><code class="language-js"><span class="hljs-comment">// 使用 events 模块</span>
+<span class="hljs-keyword">const</span> EventEmitter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);
+<span class="hljs-keyword">const</span> Applet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'applet'</span>);
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApplet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Applet</span> </span>{
+  <span class="hljs-keyword">constructor</span>(silent, keys) {
+    <span class="hljs-keyword">super</span>(silent, keys);
+    <span class="hljs-comment">// 继承 EventEmitter 实例属性 </span>
+    EventEmitter.call(<span class="hljs-keyword">this</span>);
+  }
+}
+<span class="hljs-comment">// 继承 EventEmitter 原型链属性</span>
+<span class="hljs-built_in">Object</span>.assign(MyApplet.prototype, EventEmitter.prototype);
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> MyApplet();
+
+<span class="hljs-comment">// 这个时候，我们可以轻松愉快地</span>
+<span class="hljs-comment">// 使用 events 模块的订阅/发布功能了。</span>
+app.on(<span class="hljs-string">'start'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">foo</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(foo);
+});
+
+app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ctx, next</span>) </span>{
+  app.emit(<span class="hljs-string">'start'</span>, ctx.foo);
+  <span class="hljs-keyword">await</span> next();
+  app.emit(<span class="hljs-string">'end'</span>, ctx.bar);
+});</code></pre>
+    <h4 class="heading">示例：浏览器端</h4>
+    <pre><code class="language-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ajax</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Applet</span> </span>{
+  on(event, listener) {}
+  listeners(event) {}
+  emit(event, ...args) {}
+}
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Ajax();
+
+<span class="hljs-comment">// 自定义handle函数的运行时上下文</span>
+<span class="hljs-keyword">const</span> handle = app.callback(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+
+  xhr.addEventListener(<span class="hljs-string">'abort'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    app.emit(<span class="hljs-string">'cancel'</span>, <span class="hljs-string">'用户取消接收'</span>);
+  });
+
+  <span class="hljs-keyword">return</span> xhr;
+});
+
+app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ctx, next</span>) </span>{
+  <span class="hljs-comment">// ctx 就是上面的 XMLHttpRequest 实例</span>
+
+  ctx.addEventListener(<span class="hljs-string">'load'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    next();
+  });
+
+  ctx.addEventListener(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>)  </span>{
+    app.onerror(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'数据接收出错'</span>))
+  });
+
+  ctx.open(<span class="hljs-string">'POST'</span>, <span class="hljs-string">'path/to'</span>, <span class="hljs-literal">true</span>);
+  ctx.send(<span class="hljs-string">'foo=bar'</span>);
+});
+
+handle(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">ctx</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(ctx.responseText);
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+  <span class="hljs-comment">// ... </span>
+  <span class="hljs-built_in">console</span>.log(data);
+}).catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+  app.emit(<span class="hljs-string">'error'</span>, err);
+});</code></pre>
+  </article>
+</section>
+
+
+<section>
+  <article>
+    <h2 class="heading" id="exception"><a href="#exception">#</a>异常处理（Exception）</h2>
+    <p>该框架本身极小，API也非常少，产出的异常可以分成两种，<strong>传参类型错误</strong>和<strong>handle函数运行错误</strong>。</p>
+    <h4 class="heading">传参类型错误</h4>
+    <p>调用Applet应用的相关方法（可查看Applet的API），缺少参数或给出参数类型不符合预期触发的 <code>TypeError</code> 异常。
+    该类异常会<strong>导致 Applet 应用程序立即退出</strong>，你可以通过 <strong>try/catch</strong> 捕获。</p>
+    <pre><code class="language-js"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
+
+<span class="hljs-comment">// 使用中间件触发异常的用例：</span>
+app.use();<span class="hljs-comment">//没有传参</span>
+app.use(<span class="hljs-number">234</span>);<span class="hljs-comment">//参数不是函数</span>
+app.use(<span class="hljs-string">'123'</span>, () =&gt; <span class="hljs-string">'todo something'</span>);<span class="hljs-comment">// 第一个参数不是函数</span>
+
+<span class="hljs-keyword">try</span> {
+  <span class="hljs-comment">// 在这里调用 app.use 方法使用中间件到 Applet 应用上。</span>
+} <span class="hljs-keyword">catch</span>(err) {
+  <span class="hljs-comment">// err 是捕获到的异常信息</span>
+}
+
+<span class="hljs-comment">// handle函数异常处理触发的异常用例：</span>
+<span class="hljs-comment">// 参数必须是 Error 的实例</span>
+app.onerror(<span class="hljs-string">'error message'</span>);</code></pre>
+    <h4 class="heading">handle函数运行错误</h4>
+    <p>该错误是调用Applet应用的callback方法产出的handle函数被执行是触发的，是中间件产出的。
+    由于handle函数返回值是 Promise 实例，这可以轻松的使用<strong><code>.catch</code></strong>刚发捕获该异常。</p>
+    <pre><code class="language-js"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
+
+app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-comment">// 中间件产生的异常</span>
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'.....'</span>);
+});
+
+<span class="hljs-keyword">const</span> handle = app.callback();
+
+handle().catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+  <span class="hljs-comment">// 在这里可以捕获到异常</span>
+  <span class="hljs-built_in">console</span>.log(err);
+});</code></pre>
+    <h4 class="heading">Applet应用的静默模式</h4>
+    <p>handle函数执行时，发现中间件类型不符合预期，未开启静默模式的情况下，会触发 TypeError 异常，相反则忽略之。</p>
+    <p>在默认情况下，会将handle函数产出的的所有错误输出到 <strong>stderr</strong> 或者 <strong>控制台</strong>，除非handle函数的执行上下文属性 <code>silent</code> 为 <code>true</code>。</p>
+  </article>
+</section>
+
+
+<footer>
+  <article>
+    <h2 class="heading" id="license"><a href="#license">#</a>授权协议（License）</h2>
+    <p>MIT © 2018, <a href="mailto:japplet@163.com" title="japplet@163.com">Maofeng Zhang</a></p>
+  </article>
+</footer>
+
+<script>
+  (function (codes) {
+    function each(arr, fn) {
+      for (var i = 0; i < arr.length; i++) {
+        fn(arr[i], i, arr);
+      }
+    }
+
+    function createElement(tag, className) {
+      var el = document.createElement(tag);
+      el.className = className;
+      return el;
+    }
+
+    each(codes, function (code) {
+      var parent = code.parentNode;
+      switch (parent.nodeName) {
+        case 'PRE':
+          break;
+        case 'A':
+          parent.className += ' code-link';
+          break;
+        default:
+          return;
+      }
+      if (code.parentNode.nodeName !== 'PRE') {
+        return;
+      }
+
+      var ul = createElement('ul', 'pre-numbering');
+
+      each(code.innerHTML.split('\n'), function (_, i) {
+        var li = createElement('li', '');
+        li.innerHTML = (i + 1) + '.';
+        ul.appendChild(li);
+      });
+
+      code.className += ' has-numbering';
+      parent.appendChild(ul);
+    });
+  }(document.getElementsByTagName('code')));
+</script>
+</body>
+</html>
