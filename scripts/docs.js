@@ -43,13 +43,6 @@ function replace(source, data = locals) {
   });
 }
 
-function readme(sources) {
-  locals.logo = 'applet.png';
-  let source = sources.filter(Boolean).join('\n\n\n\n');
-  source = source.replace(idMatchReplace, '').replace(/\[([^\]]+)\]\(#.+?\)/ig, '【$1】');
-  fs.writeFileSync(__dirname + '/../readme.md', replace(source), 'UTF8');
-}
-
 function highlight(code, lang) {
   const data = hl.highlight(lang, code, 'linenumbers');
   return data.value;
@@ -125,14 +118,13 @@ function html(sources) {
   });
 
   Promise.all(tasks).then(function () {
-    const content = fs.readFileSync(__dirname + '/../docs/readme.html', 'UTF-8');
+    const content = fs.readFileSync(__dirname + '/../docs/_template.html', 'UTF-8');
     locals.content = createNevigation() + '\n\n' + partials.join('\n\n');
-    fs.writeFileSync(__dirname + '/../index.html', replace(content), 'UTF8');
+    fs.writeFileSync(__dirname + '/../docs/index.html', replace(content), 'UTF8');
   }).catch(function (err) {
     console.error(err);
     process.exit(err.code || -1);
   });
 }
 
-readme(sources);
 html(sources);

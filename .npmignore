@@ -129,7 +129,7 @@ test/
 .editorconfig
 .gitignore
 .npmignore
-applet.svg
+docs/applet.svg
 index.html
 yarn.lock
 package-lock.json
