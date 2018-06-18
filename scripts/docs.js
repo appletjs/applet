@@ -53,8 +53,9 @@ renderer.heading = function (text, level, raw) {
   let id = raw.match(idMatchRE);
   id = id && id[1].trim().replace(/\s+/i, '-');
   if (id && level === 2) links.push({text, id});
-  const ID = id ? ' id="' + id + '"' : '';
-  return `<h${level}${ID}>${text}</h${level}>\n`;
+  // const ID = id ? ' id="' + id + '"' : '';
+  // return `<h${level}${ID}>${text}</h${level}>\n`;
+  return `<h${level}>${text}</h${level}>\n`;
 };
 
 renderer.link = function(href, title, text) {
@@ -73,75 +74,50 @@ renderer.link = function(href, title, text) {
   return html;
 };
 
-function createNevigation() {
-  return `<div id="navigation">
-  <div class="nav" id="nav">
-    <img class="brand" src="img/applet-white.png" alt="applet">
-    <div class="nav-anchor" id="nav-anchor">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <nav class="nav-menu">
-${links.map(function ({text, id}) {
-  return `      <a href="#${id}">${text}</a>`;
-}).join('\n')}
-      <hr class="nav-menu-divider">
-      <a href="#">返回顶部（Go to top）</a>
-    </nav>
-  </div>
-</div>`;
-}
+const partials = [];
+const tasks = [];
 
-function html(sources) {
-  const partials = [];
-  const tasks = [];
+sources.map(function (file, i) {
+  return new Promise(function (resolve, reject) {
+    const content = replace(sources[i]);
+    marked(content, {highlight, renderer}, function (err, content) {
+      if (err) return reject(err);
 
-  locals.logo = 'applet.svg';
+      content = content.replace(/\.\.\/(img|css|js)/i, '$1');
 
-  sources.map(function (file, i) {
-    return new Promise(function (resolve, reject) {
-      const content = replace(sources[i]);
-      marked(content, {highlight, renderer}, function (err, content) {
-        if (err) return reject(err);
+      let inPre = false;
+      content = content.split('\n').map(function (line) {
+        if (inPre) {
+          if (line.endsWith('</pre>')) inPre = false;
+          return line;
+        }
 
-        content = content.replace(/\.\.\/(img|css|js)/i, '$1');
+        if (line.startsWith('<pre>')) {
+          inPre = true;
+        }
 
-        let inPre = false;
-        content = content.split('\n').map(function (line) {
-          if (inPre) {
-            if (line.endsWith('</pre>')) inPre = false;
-            return line;
-          }
+        return '    ' + line;
+      }).join('\n');
 
-          if (line.startsWith('<pre>')) {
-            inPre = true;
-          }
+      const tag = i === 0 ? 'header' : i === sources.length - 1 ? 'footer' : 'section';
+      const id = ' id="' + (i > 0 ? links[i-1].id : 'site-header') + '"';
+      const title = ' title="' + (i > 0 ? links[i-1].text : '') + '"';
 
-          return '    ' + line;
-        }).join('\n');
+      partials.push(
+        '<' + tag + id + title + '>\n' +
+        '  <article>\n' +
+        '    ' + content.trim() + '\n' +
+        '  </article>\n' +
+        '</' + tag + '>\n'
+      );
 
-        const id = i === 0
-          ? ' id="head"'
-          : i === sources.length - 1
-            ? ' id="foot"'
-            : '';
-
-        partials.push(
-          '<section' + id + '>\n' +
-          '  <article>\n' +
-          '    ' + content.trim() + '\n' +
-          '  </article>\n' +
-          '</section>\n'
-        );
-
-        resolve();
-      });
+      resolve();
     });
   });
+});
 
-  Promise.all(tasks).then(function () {
-    fs.writeFileSync(__dirname + '/../docs/index.html', replace(`<!DOCTYPE html>
+Promise.all(tasks).then(function () {
+  fs.writeFileSync(__dirname + '/../docs/index.html', replace(`<!doctype html>
 <html lang="zh">
 <head>
   <meta name="charset" content="utf-8">
@@ -155,16 +131,32 @@ function html(sources) {
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-${createNevigation()}
+<div class="nav-wrapper">
+  <div class="nav">
+    <div class="nav-brand">
+      <img class="brand" src="img/applet-white.png" alt="applet">
+    </div>
+    <div class="nav-title"></div>
+    <nav class="nav-main">
+${links.map(function ({text, id}) {
+  return `      <a href="#${id}" title="${text}">${text}</a>`;
+}).join('\n')}
+      <div class="nav-main-divider"></div>
+      <a href="#site-header">返回顶部（Go to top）</a>
+    </nav>
+    <div class="nav-hamburger">
+        <span></span>
+        <span></span>
+    </div>
+  </div>
+</div>
 
 ${partials.join('\n')}
+
 <script src="script.js"></script>
 </body>
 </html>`), 'UTF8');
-  }).catch(function (err) {
-    console.error(err);
-    process.exit(err.code || -1);
-  });
-}
-
-html(sources);
+}).catch(function (err) {
+  console.error(err);
+  process.exit(err.code || -1);
+});

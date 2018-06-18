@@ -1,9 +1,3 @@
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
 html {
   height: 100%;
   line-height: 1.6;
@@ -16,22 +10,32 @@ body {
   font: 16px/1.5 Helvetica, Arial, Verdana, sans-serif;
   height: 100%;
   margin: 0;
-  padding: 0;
   background-color: white;
   color: #33333d;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+}
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 section,
 article,
 blockquote,
 header,
-footer {
+footer,
+nav {
   display: block;
 }
 
 hr {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 0;
   overflow: visible;
@@ -58,15 +62,12 @@ blockquote {
   color: #777;
 }
 
-h2[id] {
-  padding-top: 50px!important;
-}
-
 a {
   background-color: transparent;
   text-decoration: none;
-  color: #ffa000;
   transition: all 250ms;
+  transform: translateZ(0);
+  color: #ffa000;
 }
 
 a:hover {
@@ -74,217 +75,8 @@ a:hover {
   color: #ff6f00;
 }
 
-section {
-  min-height: 50%;
-  padding: 100px 100px 150px;
-  text-align: center;
-}
-
-section:nth-child(2n-1) {
-  background: #fdfdfd;
-  box-shadow: inset 0 1px 0 0 white;
-}
-
-section:not(:last-child) {
-  border-bottom: 1px solid #eee;
-}
-
-article {
-  margin: 0 auto;
-  max-width: 750px;
-  text-align: left;
-}
-
-article > *:first-child {
-  margin-top: 0;
-}
-
-article > *:last-child {
-  margin-bottom: 0;
-}
-
-section#head {
-  display: table;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-
-section#head > article {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
-
-section#head img[src$="applet.png"] {
-  width: 100px;
-  height: auto;
-}
-
-section#foot {
-  min-height: 0;
-}
-
-.description {
-  font-size: 40px;
-  font-weight: 200;
-  letter-spacing: 1.5px;
-  margin: 0 auto 1.5rem;
-  width: 60%;
-  text-align: center;
-  line-height: 1.25;
-}
-
-.btn {
-  display: inline-block;
-  height: 38px;
-  width: 120px;
-  border: 1px solid transparent;
-  border-radius: 19px;
-  line-height: 38px;
-  letter-spacing: 0.5px;
-  text-align: center;
-  font-weight: normal;
-  margin-right: 10px;
-  background-color: #ffa000;
-  color: #fff;
-}
-.btn.outline {
-  border: 1px solid #ffa000;
-  border-radius: 100px;
-  color: #ffa000;
-  background-color: transparent;
-}
-.btn:hover {
-  background-color: #ff6f00;
-  color: #fff;
-  border-color: #ff6f00;
-  text-decoration: none;
-}
-
-/***** navigation *****/
-#navigation {
-  z-index: 100;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  font-size: 0;
-  box-shadow: 0 1px 3px 0 #ddd;
-  background-color: #ffa000;
-  background: -webkit-linear-gradient(left, #E77022 , #D93A98); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(right, #E77022, #D93A98); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(right, #E77022, #D93A98); /* Firefox 3.6 - 15 */
-  background: linear-gradient(to right, #E77022 , #D93A98); /* 标准的语法 */
-}
-
-.brand {
-  display: block;
-  position: absolute;
-  left: 1rem;
-  top: .8rem;
-  width: auto;
-  height: 1.25rem;
-}
-
-.nav {
-  position: relative;
-  margin: 0 1rem;
-  z-index: 2;
-  text-align: right;
-}
-
-.nav-anchor {
-  z-index: 2;
-  position: relative;
-  display: inline-block;
-  padding: .8rem;
-  cursor: pointer;
-  transition: background-color 250ms;
-}
-
-.nav-anchor span {
-  display: block;
-  width: 1rem;
-  height: 4px;
-  margin: 2px;
-  background-color: #fff;
-}
-
-.nav-menu {
-  z-index: 1;
-  position: absolute;
-  display: none;
-  top: 100%;
-  right: 0;
-  border: 1px solid #efefef;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, .95);
-  box-shadow: 0 1px 3px 0 #eee;
-  text-align: left;
-}
-
-.nav-menu a {
-  display: block;
-  white-space: nowrap;
-  padding: 3px 0;
-  font-size: .875rem
-}
-
-.nav-menu-divider {
-  border: none;
-  height: .6rem;
-}
-
-.nav.show .nav-anchor,
-.nav-anchor:hover {
-  background-color: #ff6f00;
-}
-
-.nav.show .nav-menu {
-  display: block;
-}
-
-@media screen and (max-width: 700px) {
-  section {
-    padding: 50px 25px;
-  }
-
-  .nav {
-    margin: 0;
-    padding: 0 1rem;
-  }
-
-  .nav-menu {
-    width: 100%;
-  }
-
-  .nav-menu a {
-    padding: .5rem;
-  }
-
-  .nav-menu a:hover {
-    background-color: rgba(255, 111, 0, .85);
-    color: #fff;
-    text-decoration: none;
-  }
-
-  .description {
-    width: 100%;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  body {
-    font-size: 13px;
-  }
-
-  .description {
-    font-size: 32px;
-  }
-}
-
-pre, code {
+pre,
+code {
   font-family: Monaco, Courier, monospace;
   -webkit-font-smoothing: initial;
   -moz-osx-font-smoothing: initial;
@@ -293,12 +85,6 @@ pre, code {
 pre {
   font-size: 1rem;
   margin-bottom: 1rem;
-}
-
-pre code {
-  font-size: 1rem;
-  line-height: 1.5;
-  border: 1px solid #e1e1e8;
 }
 
 code:not([class^="language-"]) {
@@ -312,11 +98,297 @@ code:not([class^="language-"]) {
 }
 
 /**
- * 语法高亮
+ * Button
  */
+
+.btn {
+  display: inline-block;
+  height: 2.375rem;
+  border: 1px solid transparent;
+  border-radius: 1.2rem;
+  line-height: 2.375rem;
+  letter-spacing: 0.5px;
+  text-align: center;
+  font-weight: normal;
+  vertical-align: middle;
+  padding: 0 1em;
+  background-color: #ffa000;
+  color: #fff;
+  transition: all .25s ease;
+  transform: translateZ(0);
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+.btn.outline {
+  border: 1px solid #ffa000;
+  color: #ffa000;
+  background-color: transparent;
+}
+
+.btn:hover {
+  background-color: #ff6f00;
+  color: #fff;
+  border-color: #ff6f00;
+  text-decoration: none;
+}
+
+.btn + .btn {
+  margin-left: 1rem;
+}
+
+/**
+ * Navigation
+ */
+
+.nav-wrapper {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 1rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+  transition: all .25s ease;
+  transform: translateZ(0);
+  background-color: #E77022;
+  background: -webkit-linear-gradient(left, #E77022, #D93A98); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #E77022, #D93A98); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #E77022, #D93A98); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #E77022, #D93A98); /* 标准的语法 */
+}
+
+.nav {
+  display: table;
+  width: 100%;
+  color: white;
+}
+
+.nav-brand,
+.nav-title,
+.nav-main,
+.nav-hamburger {
+  position: relative;
+  display: table-cell;
+  vertical-align: middle;
+  padding: .5rem;
+}
+
+.nav-brand {
+  width: 1%;
+}
+
+.nav-brand img {
+  display: block;
+  width: auto;
+  height: 1.25rem;
+}
+
+.nav-title {
+  display: table-cell;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1;
+  padding-left: 1.5rem;
+  text-transform: capitalize;
+}
+
+.nav-title:not(:empty):before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: .875rem;
+  left: .5rem;
+  bottom: .875rem;
+  width: 2px;
+  background-color: currentColor;
+  opacity: .5;
+}
+
+.nav-main {
+  /* 1*2 + .25*3 + .125*2 + .5 = 3.5 */
+  padding: 3.5rem .5rem .5rem;
+  font-size: 0;
+  z-index: 9;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  transform: translateX(100%);
+  transition: all 250ms;
+  background-color: #fff;
+  min-width: 38.2vw;
+  text-align: left;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-main.is-show {
+  transform: translateX(0);
+  box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+}
+
+.nav-main a {
+  display: block;
+  /* .875*2 + .125*2 + .25*4 = 3 */
+  line-height: 3rem;
+  padding: 0 .875rem;
+  font-size: 1rem;
+  color: #33333d;
+}
+
+.nav-main a:hover {
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.nav-main-divider {
+  height: .5rem;
+}
+
+.nav-hamburger {
+  z-index: 10;
+  width: 1%;
+  text-decoration: none !important;
+  padding: 1rem .875rem; /* 为什么是1rem? 子节点span的margin重叠了 0.25rem */
+  cursor: pointer;
+  transition: all 250ms;
+  transform: translateZ(0);
+}
+
+.nav-hamburger:hover {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.nav-hamburger span {
+  position: relative;
+  display: block;
+  width: 1rem;
+  height: 0.125rem;
+  background-color: #fff;
+  transition: all 250ms;
+  transform: translateZ(0);
+  transform-origin: center;
+  margin: 0.25rem; /* 两个 span 之间的 margin 被重叠了 0.25rem，将它添加到父类的padding上面 */
+}
+
+.nav-hamburger.is-active span:first-child {
+  background-color: #33333d;
+  transform: rotate(225deg);
+  /* margin/2 + height/2 */
+  /* .25/2 + .125/2 = .1875 */
+  top: 0.1875rem;
+}
+
+.nav-hamburger.is-active span:last-child {
+  background-color: #33333d;
+  transform: rotate(-225deg);
+  top: -0.1875rem;
+}
+
+@media screen and (max-width: 320px) {
+  .nav-main {
+    min-width: 50vw;
+  }
+}
+
+/**
+ * Section
+ */
+
+section {
+  min-height: 50%;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+section:nth-child(2n-1) {
+  background: #fdfdfd;
+  box-shadow: inset 0 1px 0 0 white;
+}
+
+footer {
+  border-top: 1px solid #eee;
+}
+
+header,
+section,
+main,
+footer {
+  padding: 6.25rem;
+}
+
+header > article,
+footer > article,
+section > article {
+  margin: 0 auto;
+  max-width: 46.875rem;
+  text-align: left;
+}
+
+article > *:first-child {
+  margin-top: 0;
+}
+
+article > *:last-child {
+  margin-bottom: 0;
+}
+
+header {
+  display: table;
+  width: 100%;
+  height: 100%;
+  min-height: 33.75rem;
+  padding: 0;
+}
+
+header > article {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+header img[src$="applet.png"] {
+  width: 100px;
+  height: auto;
+}
+
+.description {
+  font-size: 40px;
+  font-weight: 200;
+  letter-spacing: 1.5px;
+  margin: 0 auto 1.5rem;
+  width: 33rem;
+  text-align: center;
+  line-height: 1.25;
+}
+
+@media screen and (max-width: 700px) {
+  header,
+  section,
+  main,
+  footer {
+    padding: 50px 25px;
+  }
+
+  .description {
+    width: 100%;
+  }
+}
+
+/**
+ * Hightlight
+ */
+
 pre {
   position: relative;
   overflow: hidden;
+}
+
+pre code {
+  font-size: 1rem;
+  line-height: 1.5;
+  border: 1px solid #e1e1e8;
 }
 
 code.has-numbering {
@@ -331,7 +403,7 @@ code.has-numbering {
   background-color: #f7f7f9;
   color: #aaa;
   text-align: right;
-  width: 1.5rem;
+  width: 2rem;
   margin: 0;
   padding: .5rem 2px .5rem 6px;
   border-right: 1px solid #e1e1e8;
@@ -344,9 +416,10 @@ code.has-numbering {
   list-style: none;
 }
 
-/**/
+/**
+ * highlightjs
+ */
 
-/**** highlightjs ****/
 .hljs,
 [class^="language-"] {
   display: block;

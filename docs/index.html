@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh">
 <head>
   <meta name="charset" content="utf-8">
@@ -12,30 +12,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="navigation">
-  <div class="nav" id="nav">
-    <img class="brand" src="img/applet-white.png" alt="applet">
-    <div class="nav-anchor" id="nav-anchor">
-      <span></span>
-      <span></span>
-      <span></span>
+<div class="nav-wrapper">
+  <div class="nav">
+    <div class="nav-brand">
+      <img class="brand" src="img/applet-white.png" alt="applet">
     </div>
-    <nav class="nav-menu">
-      <a href="#introduction">简介（Introduction）</a>
-      <a href="#installation">安装（Installation）</a>
-      <a href="#applet">应用程序（Applet）</a>
-      <a href="#middleware">中间件（Middleware）</a>
-      <a href="#context">上下文（Context）</a>
-      <a href="#event-emitter">事件接口（EventEmitter）</a>
-      <a href="#exception">异常处理（Exception）</a>
-      <a href="#license">授权协议（License）</a>
-      <hr class="nav-menu-divider">
-      <a href="#">返回顶部（Go to top）</a>
+    <div class="nav-title"></div>
+    <nav class="nav-main">
+      <a href="#introduction" title="简介（Introduction）">简介（Introduction）</a>
+      <a href="#installation" title="安装（Installation）">安装（Installation）</a>
+      <a href="#applet" title="应用程序（Applet）">应用程序（Applet）</a>
+      <a href="#middleware" title="中间件（Middleware）">中间件（Middleware）</a>
+      <a href="#context" title="上下文（Context）">上下文（Context）</a>
+      <a href="#event-emitter" title="事件接口（EventEmitter）">事件接口（EventEmitter）</a>
+      <a href="#exception" title="异常处理（Exception）">异常处理（Exception）</a>
+      <a href="#license" title="授权协议（License）">授权协议（License）</a>
+      <div class="nav-main-divider"></div>
+      <a href="#site-header">返回顶部（Go to top）</a>
     </nav>
+    <div class="nav-hamburger">
+        <span></span>
+        <span></span>
+    </div>
   </div>
 </div>
 
-<section id="head">
+<header id="site-header" title="">
   <article>
     <p><img src="img/applet.png" alt="applet"></p>
     <p><a href="https://www.npmjs.com/package/applet"><img src="https://img.shields.io/npm/v/applet.svg?style=flat-square" alt="version"></a>
@@ -48,11 +50,11 @@
     <p><a class="btn" href="#introduction">Get Started</a>
     <a class="btn outline" href="https://github.com/appletjs/applet">GitHub</a></p>
   </article>
-</section>
+</header>
 
-<section>
+<section id="introduction" title="简介（Introduction）">
   <article>
-    <h2 id="introduction">简介（Introduction）</h2>
+    <h2>简介（Introduction）</h2>
     <p><code>Applet</code> 参考并使用了 <a href="https://koajs.com/"><code>Koa框架</code></a> 核心部分，是一个体积极小且极具表现力的中间件框架。
     它没有捆绑任何中间件，也不依赖第三方包，可以运行在<strong>Node.js环境下</strong>和<strong>浏览器端</strong>。
     它的中间件之间按照编码顺序在栈内依次执行，允许我们执行操作并向下传递请求（downstream），之后过滤并逆序返回响应（upstream）。</p>
@@ -68,9 +70,9 @@
   </article>
 </section>
 
-<section>
+<section id="installation" title="安装（Installation）">
   <article>
-    <h2 id="installation">安装（Installation）</h2>
+    <h2>安装（Installation）</h2>
     <p>Node.js 环境下或用于集成到项目可以使用 <a href="https://docs.npmjs.com/getting-started/what-is-npm"><code>npm</code></a> 或 <a href="https://yarnpkg.com/"><code>yarn</code></a> 安装：</p>
     <h4>npm</h4>
     <pre><code class="language-bash"><span class="hljs-comment"># 安装最新版本</span>
@@ -92,9 +94,9 @@ $ yarn add applet</code></pre>
   </article>
 </section>
 
-<section>
+<section id="applet" title="应用程序（Applet）">
   <article>
-    <h2 id="applet">应用程序（Applet）</h2>
+    <h2>应用程序（Applet）</h2>
     <p><strong>Applet</strong> 应用程序是一个包含一组中间件函数的对象，它是按照类似堆栈的方式组织和执行的。
     因为使用了 Koa 的核心概念，所以关键的设计点与Koa保持一致：在其低级中间件层中提供高级“语法糖”。
     这样既提高了互操作性、稳健性，并使书写中间件更加愉快。</p>
@@ -186,13 +188,13 @@ app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; {
 app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   ctx.body = <span class="hljs-string">'Hello World'</span>;
 });</code></pre>
-    <h4 id="new-applet">new Applet([silent=false[, keys=&#39;env silent&#39;]])</h4>
+    <h4>new Applet([silent=false[, keys=&#39;env silent&#39;]])</h4>
     <p>初始化一个 Applet 应用，参数可选：</p>
     <ul>
     <li><code>{boolean} silent</code> 静默处理错误。</li>
     <li><code>{string | Array&lt;string&gt;} keys</code> 上下文环境的属性名称。</li>
     </ul>
-    <h4 id="app-use">app.use(...fns)</h4>
+    <h4>app.use(...fns)</h4>
     <p>注册中间件到 Applet 应用上，然后<strong>返回当前Applet应用实例</strong>，方便链式调用。
     参阅 <a href="#middleware">Middleware</a> 获取更多信息.</p>
     <ul>
@@ -201,7 +203,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
     <blockquote>
     <p>实际上，同时注册的多个中间件会被组合（compose）成一个中间件注册到 Applet 应用上。</p>
     </blockquote>
-    <h4 id="app-onerror">app.onerror(err)</h4>
+    <h4>app.onerror(err)</h4>
     <p>默认错误处理方式。参阅 <a href="#exception">Exception</a> 获取更多信息.</p>
     <ul>
     <li><code>{Error | *} err</code> 被处理的错误。</li>
@@ -224,9 +226,9 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   </article>
 </section>
 
-<section>
+<section id="middleware" title="中间件（Middleware）">
   <article>
-    <h2 id="middleware">中间件（Middleware）</h2>
+    <h2>中间件（Middleware）</h2>
     <p>Applet 是一个中间件框架，可以采用两种不同的方法来实现中间件：</p>
     <ul>
     <li>async function</li>
@@ -258,9 +260,9 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   </article>
 </section>
 
-<section>
+<section id="context" title="上下文（Context）">
   <article>
-    <h2 id="context">上下文（Context）</h2>
+    <h2>上下文（Context）</h2>
     <p>上下文分为 <strong>Applet应用上下文</strong> 和 <strong>handle函数执行上下文</strong>。</p>
     <p>每个中间件都接收一个纯对象 <code>Object</code>，正常情况下，该对象初始化状态仅仅包含了 Applet 实例的下面两个简单配置为属性。
     <code>ctx</code> 通常用作上下文对象的参数名称。</p>
@@ -326,9 +328,9 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
   </article>
 </section>
 
-<section>
+<section id="event-emitter" title="事件接口（EventEmitter）">
   <article>
-    <h2 id="event-emitter">事件接口（EventEmitter）</h2>
+    <h2>事件接口（EventEmitter）</h2>
     <p>Applet应用预留了三个事件触发接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式。
     参阅 <a href="#exception">Exception</a> 获取更多信息.</p>
     <ul>
@@ -428,9 +430,9 @@ handle(<span class="hljs-function"><span class="hljs-keyword">function</span>(<s
   </article>
 </section>
 
-<section>
+<section id="exception" title="异常处理（Exception）">
   <article>
-    <h2 id="exception">异常处理（Exception）</h2>
+    <h2>异常处理（Exception）</h2>
     <p>该框架本身极小，API也非常少，产出的异常可以分成两种，<strong>传参类型错误</strong>和<strong>handle函数执行时异常</strong>。</p>
     <h4>传参类型错误</h4>
     <p>调用Applet应用的相关方法（可查看Applet的API），缺少参数或给出参数类型不符合预期触发的 <code>TypeError</code> 异常。
@@ -487,12 +489,13 @@ app.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><sp
   </article>
 </section>
 
-<section id="foot">
+<footer id="license" title="授权协议（License）">
   <article>
-    <h2 id="license">授权协议（License）</h2>
+    <h2>授权协议（License）</h2>
     <p>MIT © 2018, <a href="mailto:japplet@163.com" title="japplet@163.com">Maofeng Zhang</a></p>
   </article>
-</section>
+</footer>
+
 
 <script src="script.js"></script>
 </body>
