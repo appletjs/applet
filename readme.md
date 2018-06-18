@@ -58,6 +58,7 @@ handle((ctx) => {
 * [应用程序](https://appletjs.github.io/applet/index.html#applet)
 * [中间件](https://appletjs.github.io/applet/index.html#middleware)
 * [上下文](https://appletjs.github.io/applet/index.html#context)
+* [事件接口](https://appletjs.github.io/applet/index.html#event-emitter)
 * [异常处理](https://appletjs.github.io/applet/index.html#exception)
 * [授权协议](https://appletjs.github.io/applet/index.html#license)
 

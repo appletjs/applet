@@ -1,5 +1,5 @@
 /*!
- * applet.js v0.0.8
+ * applet.js v0.0.9
  * (c) 2018 Maofeng Zhang
  * Released under the MIT License.
  */
