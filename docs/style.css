@@ -71,7 +71,7 @@ a {
 
 a:hover {
   text-decoration: underline;
-  color: #ffa000;
+  color: #ff6f00;
 }
 
 section {
@@ -95,11 +95,11 @@ article {
   text-align: left;
 }
 
-article *:first-child {
+article > *:first-child {
   margin-top: 0;
 }
 
-article *:last-child {
+article > *:last-child {
   margin-bottom: 0;
 }
 
@@ -116,8 +116,50 @@ section#head > article {
   text-align: center;
 }
 
+section#head img[src$="applet.png"] {
+  width: 100px;
+  height: auto;
+}
+
 section#foot {
   min-height: 0;
+}
+
+.description {
+  font-size: 40px;
+  font-weight: 200;
+  letter-spacing: 1.5px;
+  margin: 0 auto 1.5rem;
+  width: 60%;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.btn {
+  display: inline-block;
+  height: 38px;
+  width: 120px;
+  border: 1px solid transparent;
+  border-radius: 19px;
+  line-height: 38px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  font-weight: normal;
+  margin-right: 10px;
+  background-color: #ffa000;
+  color: #fff;
+}
+.btn.outline {
+  border: 1px solid #ffa000;
+  border-radius: 100px;
+  color: #ffa000;
+  background-color: transparent;
+}
+.btn:hover {
+  background-color: #ff6f00;
+  color: #fff;
+  border-color: #ff6f00;
+  text-decoration: none;
 }
 
 /***** navigation *****/
@@ -127,18 +169,22 @@ section#foot {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #ffa000;
   font-size: 0;
   box-shadow: 0 1px 3px 0 #ddd;
+  background-color: #ffa000;
+  background: -webkit-linear-gradient(left, #E77022 , #D93A98); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #E77022, #D93A98); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #E77022, #D93A98); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #E77022 , #D93A98); /* 标准的语法 */
 }
 
-.logo {
+.brand {
+  display: block;
   position: absolute;
   left: 1rem;
-  font-size: 1rem;
-  top: 25%;
-  color: #fff;
-  text-transform: capitalize;
+  top: .8rem;
+  width: auto;
+  height: 1.25rem;
 }
 
 .nav {
@@ -222,11 +268,19 @@ section#foot {
     color: #fff;
     text-decoration: none;
   }
+
+  .description {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 500px) {
   body {
     font-size: 13px;
+  }
+
+  .description {
+    font-size: 32px;
   }
 }
 
@@ -238,6 +292,7 @@ pre, code {
 
 pre {
   font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
 pre code {

@@ -22,7 +22,7 @@ const files = [
 ];
 
 const sources = files.map(function (file) {
-  file = path.join(__dirname, '../docs', file);
+  file = path.join(__dirname, '../docs/md', file);
   return fs.readFileSync(file, 'UTF8').trim();
 });
 
@@ -57,19 +57,35 @@ renderer.heading = function (text, level, raw) {
   return `<h${level}${ID}>${text}</h${level}>\n`;
 };
 
+renderer.link = function(href, title, text) {
+  let temp = '', clazz;
+  if (/^[#.]/.test(title)) {
+    clazz = title.split('.').map(function (cl) {
+      const [c, i] = cl.split('#', 2);
+      if (i) temp += ' id="' + i + '"';
+      return c;
+    }).filter(Boolean).join(' ');
+    title = '';
+  }
+  if (clazz) temp += ' class="' + clazz + '"';
+  let html = marked.Renderer.prototype.link.call(this, href, title, text);
+  if (temp) html = '<a' + temp + html.substring(2);
+  return html;
+};
+
 function createNevigation() {
   return `<div id="navigation">
   <div class="nav" id="nav">
-    <span class="logo">applet</span>
+    <img class="brand" src="img/applet-white.png" alt="applet">
     <div class="nav-anchor" id="nav-anchor">
       <span></span>
       <span></span>
       <span></span>
     </div>
     <nav class="nav-menu">
-  ${links.map(function ({text, id}) {
-      return `      <a href="#${id}">${text}</a>`;
-    }).join('\n')}
+${links.map(function ({text, id}) {
+  return `      <a href="#${id}">${text}</a>`;
+}).join('\n')}
       <hr class="nav-menu-divider">
       <a href="#">返回顶部（Go to top）</a>
     </nav>
@@ -88,8 +104,10 @@ function html(sources) {
       const content = replace(sources[i]);
       marked(content, {highlight, renderer}, function (err, content) {
         if (err) return reject(err);
-        let inPre = false;
 
+        content = content.replace(/\.\.\/(img|css|js)/i, '$1');
+
+        let inPre = false;
         content = content.split('\n').map(function (line) {
           if (inPre) {
             if (line.endsWith('</pre>')) inPre = false;
@@ -130,9 +148,10 @@ function html(sources) {
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="keywords" content="{{keywords}}">
-  <meta name="description" content="{{description}}"/>
-  <meta name="author" content="{{author}}"/>
+  <meta name="description" content="{{description}}">
+  <meta name="author" content="{{author}}">
   <title>Applet - 中间件开发框架</title>
+  <link rel="shortcut icon" href="img/ico.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>

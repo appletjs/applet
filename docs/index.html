@@ -5,26 +5,28 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="keywords" content="promise middleware framework async applet">
-  <meta name="description" content="The middleware framework on promise"/>
-  <meta name="author" content="Maofeng Zhang"/>
+  <meta name="description" content="A very small and expressive middleware framework">
+  <meta name="author" content="Maofeng Zhang">
   <title>Applet - 中间件开发框架</title>
+  <link rel="shortcut icon" href="img/ico.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="navigation">
   <div class="nav" id="nav">
-    <span class="logo">applet</span>
+    <img class="brand" src="img/applet-white.png" alt="applet">
     <div class="nav-anchor" id="nav-anchor">
       <span></span>
       <span></span>
       <span></span>
     </div>
     <nav class="nav-menu">
-        <a href="#introduction">简介（Introduction）</a>
+      <a href="#introduction">简介（Introduction）</a>
       <a href="#installation">安装（Installation）</a>
       <a href="#applet">应用程序（Applet）</a>
       <a href="#middleware">中间件（Middleware）</a>
       <a href="#context">上下文（Context）</a>
+      <a href="#event-emitter">事件接口（EventEmitter）</a>
       <a href="#exception">异常处理（Exception）</a>
       <a href="#license">授权协议（License）</a>
       <hr class="nav-menu-divider">
@@ -35,12 +37,16 @@
 
 <section id="head">
   <article>
-    <p><img src="applet.svg" alt="applet"></p>
+    <p><img src="img/applet.png" alt="applet"></p>
     <p><a href="https://www.npmjs.com/package/applet"><img src="https://img.shields.io/npm/v/applet.svg?style=flat-square" alt="version"></a>
     <a href="https://www.npmjs.com/package/applet"><img src="https://img.shields.io/npm/dt/applet.svg?style=flat-square" alt="downloads"></a>
-    <a href="https://www.jsdelivr.com/package/npm/applet"><img src="https://data.jsdelivr.com/v1/package/npm/applet/badge" alt="cdn"></a>
     <a href="LICENSE"><img src="https://img.shields.io/npm/l/applet.svg?style=flat-square" alt="license"></a></p>
-    <p>The middleware framework on promise!</p>
+    <!--[![cdn](https://data.jsdelivr.com/v1/package/npm/applet/badge)](https://www.jsdelivr.com/package/npm/applet)-->
+    
+    <p class="description">A very small and expressive middleware framework!</p>
+    
+    <p><a class="btn" href="#introduction">Get Started</a>
+    <a class="btn outline" href="https://github.com/appletjs/applet">GitHub</a></p>
   </article>
 </section>
 
@@ -75,8 +81,8 @@ $ yarn add applet</code></pre>
     <h4>CDN</h4>
     <p>浏览器环境使用包目录下的 <code>browser.js</code> 文件，或者使用 CDN ：</p>
     <pre><code class="language-html"><span class="hljs-comment">&lt;!-- 推荐链接到一个你可以手动更新的指定版本号 --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//cdn.jsdelivr.net/npm/applet@0.0.8/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/applet@0.0.8/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//cdn.jsdelivr.net/npm/applet@0.0.9/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/applet@0.0.9/browser.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 
 <span class="hljs-comment">&lt;!-- 或者由CDN自动选择（最新版本可能有所延迟） --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//cdn.jsdelivr.net/npm/applet"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
@@ -91,12 +97,10 @@ $ yarn add applet</code></pre>
     <h2 id="applet">应用程序（Applet）</h2>
     <p><strong>Applet</strong> 应用程序是一个包含一组中间件函数的对象，它是按照类似堆栈的方式组织和执行的。
     因为使用了 Koa 的核心概念，所以关键的设计点与Koa保持一致：在其低级中间件层中提供高级“语法糖”。
-    这提高了互操作性，稳健性，并使书写中间件更加愉快。</p>
+    这样既提高了互操作性、稳健性，并使书写中间件更加愉快。</p>
     <h4>示例：必修的 hello world 应用</h4>
     <pre><code class="language-js"><span class="hljs-keyword">const</span> Applet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'applet'</span>);
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
-
-<span class="hljs-comment">// handle 执行结果返回一个 promise 实例</span>
 <span class="hljs-keyword">const</span> handle = app.callback();
 
 <span class="hljs-comment">// 使用一个普通函数作为中间件</span>
@@ -115,10 +119,14 @@ handle(<span class="hljs-function">(<span class="hljs-params">ctx</span>) =&gt;<
  <span class="hljs-built_in">console</span>.log(ctx.hello);
   <span class="hljs-comment">// =&gt; 'hello world!'</span>
 });</code></pre>
+    <blockquote>
+    <p><strong>ctx</strong> 表示handle函数的执行上下文，储存中间件的运行数据；
+    <strong>next</strong> 是一个函数，用来暂停当前中间件、移交控制权到下游，待下游释放控制权，然后恢复控制权。</p>
+    </blockquote>
     <h4>级联</h4>
-    <p><strong>Applet</strong> 中间件以更传统的方式级联，你可能习惯使用类似的工具（避免 Node.js 的回调地狱）,
-    所以通过使用 <strong>async/await</strong> 功能，我们可以实现 “真实” 的中间件。通过一系列功能直接传递控制，
-    直到一个返回，Applet 调用“下游”，然后控制流回“上游”。</p>
+    <p><strong>Applet</strong> 中间件以更传统的方式级联（避免 Node.js 的回调地狱），
+    所以通过使用 <strong>async/await</strong> 功能，我们可以实现 “真实” 的中间件。
+    通过一系列功能直接传递控制，直到一个返回，Applet 调用“下游”，然后控制流回“上游”。</p>
     <p>下面以 “Hello World” 的响应作为示例，首先请求流通过 x-response-time 和 logging 中间件来请求何时开始，
     然后继续移交控制给 response 中间件。当一个中间件调用 <code>next()</code> 则该函数暂停并将控制传递给定义的下一个中间件。
     当在下游没有更多的中间件执行后，堆栈将展开并且每个中间件恢复执行其上游行为。</p>
@@ -131,6 +139,7 @@ handle(<span class="hljs-function">(<span class="hljs-params">ctx</span>) =&gt;<
 http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
   <span class="hljs-comment">// 每次 http 请求，上下文数据不一样，所以在这里调用 app.callback;</span>
   <span class="hljs-comment">// 当然，你还可以使用其它方式注入上下文，具体实现方式参考后面的【Context】。</span>
+  <span class="hljs-comment">// handle 函数返回值是一个 Promise 实例。</span>
   <span class="hljs-keyword">const</span> handle = app.callback({
     req,
     res,
@@ -184,7 +193,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
     <li><code>{string | Array&lt;string&gt;} keys</code> 上下文环境的属性名称。</li>
     </ul>
     <h4 id="app-use">app.use(...fns)</h4>
-    <p>注册中间件到 applet 应用上，然后<strong>返回当前Applet应用实例</strong>。
+    <p>注册中间件到 Applet 应用上，然后<strong>返回当前Applet应用实例</strong>，方便链式调用。
     参阅 <a href="#middleware">Middleware</a> 获取更多信息.</p>
     <ul>
     <li><code>{Array&lt;Function&gt;} fns</code> 中间件列表。</li>
@@ -193,7 +202,7 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
     <p>实际上，同时注册的多个中间件会被组合（compose）成一个中间件注册到 Applet 应用上。</p>
     </blockquote>
     <h4 id="app-onerror">app.onerror(err)</h4>
-    <p>默认错误处理方式。</p>
+    <p>默认错误处理方式。参阅 <a href="#exception">Exception</a> 获取更多信息.</p>
     <ul>
     <li><code>{Error | *} err</code> 被处理的错误。</li>
     </ul>
@@ -201,16 +210,15 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
     <p>如果参数 <code>err</code> 不是 <code>Error</code> 的实例，则或触发 <code>TypeError</code> 异常，该异常不会被处理，会导致 Applet 应用立即退出。</p>
     </blockquote>
     <h4>app.callback([context])</h4>
-    <p>将Applet应用转换成可以执行中间件的<strong><code>handle函数</code></strong>，
-    该函数可以接收一个<strong><code>done函数</code></strong>来获取最终的<strong><code>handle函数运行时上下文</code></strong>数据。
+    <p>将Applet应用转换成可以执行中间件的<strong><code>handle函数</code></strong>，该函数可以接收一个<strong><code>done函数</code></strong>来获取最终的<strong><code>handle函数执行上下文</code></strong>数据。
     参阅 <a href="#context">Context</a> 获取更多信息。</p>
     <ul>
-    <li><code>{Object | Function} context</code> 注入到handle函数运行时上下文内给中间件使用的数据。</li>
+    <li><code>{Object | Function} context</code> 注入到handle函数执行上下文内给中间件使用的数据。</li>
     </ul>
     <blockquote>
     <ul>
     <li><strong>handle函数</strong>，返回值是一个 Promise 实例。</li>
-    <li><strong>done函数</strong>，接收的第一个参数是handle函数运行时上下文。</li>
+    <li><strong>done函数</strong>，接收的第一个参数是handle函数执行上下文。</li>
     </ul>
     </blockquote>
   </article>
@@ -241,8 +249,8 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
   });
 });</code></pre>
     <blockquote>
-    <p>中间件通常带有两个参数 <code>(ctx, next)</code>, <code>ctx</code> 是一个<strong>handle函数运行时上下文（context）</strong>，
-    <code>next</code> 是调用执行下游中间件的函数。在代码执行完成后通过 <strong>then</strong> 方法返回一个 <strong>Promise</strong>。</p>
+    <p>中间件通常带有两个参数 <code>(ctx, next)</code>, <code>ctx</code> 是一个<strong>handle函数执行上下文（context）</strong>，
+    <strong><code>next</code></strong> 是调用执行下游中间件的函数。在代码执行完成后通过 <strong>then</strong> 方法返回一个 <strong>Promise</strong>。</p>
     </blockquote>
     <h4>分组中间件</h4>
     <p>通过 <code>app.use(...fns)</code> 注册的一系列中间件（传递了多个参数），将转换成<strong>组合中间件</strong>被注册到 Applet 应用上。
@@ -253,16 +261,26 @@ app.use(<span class="hljs-keyword">async</span> ctx =&gt; {
 <section>
   <article>
     <h2 id="context">上下文（Context）</h2>
-    <p>上下文分为 <strong>Applet应用上下文</strong> 和 <strong>handle函数运行时上下文</strong>。</p>
+    <p>上下文分为 <strong>Applet应用上下文</strong> 和 <strong>handle函数执行上下文</strong>。</p>
     <p>每个中间件都接收一个纯对象 <code>Object</code>，正常情况下，该对象初始化状态仅仅包含了 Applet 实例的下面两个简单配置为属性。
     <code>ctx</code> 通常用作上下文对象的参数名称。</p>
     <ul>
-    <li><strong>env</strong> - 运行环境，默认值为 <code>(process || self).env.NODE_ENV || &#39;development&#39;</code>;</li>
-    <li><strong>silent</strong> - 对错误处理使用静默模式。</li>
+    <li><p><strong>env</strong> - 运行环境，默认值为 <code>&#39;development&#39;</code>，默认由环境变量定义，或者通过实例指定：</p>
+    <pre><code class="language-js"><span class="hljs-comment">// 指定 Node.js 的环境变量</span>
+process.env.NODE_ENV = <span class="hljs-string">'production'</span>;
+
+<span class="hljs-comment">// 指定浏览器端的环境变量</span>
+self.env = { <span class="hljs-attr">NODE_ENV</span>: <span class="hljs-string">'production'</span> };
+
+<span class="hljs-comment">// 通过指定实例指定</span>
+app.env = <span class="hljs-string">'production'</span>;</code></pre>
+    </li>
+    <li><p><strong>silent</strong> - 对错误处理使用静默模式。</p>
+    </li>
     </ul>
     <blockquote>
-    <p>正常情况下，在运行 <strong>handle函数</strong> 时中修改 Applet 应用的 <code>slient</code>、<code>env</code> 属性，
-    是无法作用到运行时上下文，除非通过自定义的<strong>handle函数运行时上下文</strong>建立响应式。</p>
+    <p>正常情况下，在执行 <strong>handle函数</strong> 时中修改 Applet 应用的 <code>slient</code>、<code>env</code> 属性，
+    是无法作用到handle函数执行上下文，除非通过自定义的handle函数执行上下文建立响应。</p>
     </blockquote>
     <h4>执行前（执行时）注入数据</h4>
     <p>在调用 <strong><code>app.callback(data)</code></strong> 产生 <strong><code>handle函数</code></strong> 时，可以将你的数据注入到执行上下文；
@@ -310,8 +328,9 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
 
 <section>
   <article>
-    <h2>事件触发接口（EventEmitter）</h2>
-    <p>Applet应用预留了三个事件触发接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式，具体情况请查看【异常】。</p>
+    <h2 id="event-emitter">事件接口（EventEmitter）</h2>
+    <p>Applet应用预留了三个事件触发接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式。
+    参阅 <a href="#exception">Exception</a> 获取更多信息.</p>
     <ul>
     <li>listeners(event) 返回事件侦听器列表<ul>
     <li><code>{string|symbol} event</code> 事件名称</li>
@@ -372,7 +391,7 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
 
 <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Ajax();
 
-<span class="hljs-comment">// 自定义handle函数的运行时上下文</span>
+<span class="hljs-comment">// 自定义handle函数的执行上下文</span>
 <span class="hljs-keyword">const</span> handle = app.callback(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">const</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
 
@@ -412,7 +431,7 @@ handle(<span class="hljs-function"><span class="hljs-keyword">function</span>(<s
 <section>
   <article>
     <h2 id="exception">异常处理（Exception）</h2>
-    <p>该框架本身极小，API也非常少，产出的异常可以分成两种，<strong>传参类型错误</strong>和<strong>handle函数运行错误</strong>。</p>
+    <p>该框架本身极小，API也非常少，产出的异常可以分成两种，<strong>传参类型错误</strong>和<strong>handle函数执行时异常</strong>。</p>
     <h4>传参类型错误</h4>
     <p>调用Applet应用的相关方法（可查看Applet的API），缺少参数或给出参数类型不符合预期触发的 <code>TypeError</code> 异常。
     该类异常会<strong>导致 Applet 应用程序立即退出</strong>，你可以通过 <strong>try/catch</strong> 捕获。</p>
@@ -432,7 +451,7 @@ app.use(<span class="hljs-string">'123'</span>, () =&gt; <span class="hljs-strin
 <span class="hljs-comment">// handle函数异常处理触发的异常用例：</span>
 <span class="hljs-comment">// 参数必须是 Error 的实例</span>
 app.onerror(<span class="hljs-string">'error message'</span>);</code></pre>
-    <h4>handle函数运行错误</h4>
+    <h4>handle函数执行时异常</h4>
     <p>该错误是调用Applet应用的callback方法产出的handle函数被执行是触发的，是中间件产出的。
     由于handle函数返回值是 Promise 实例，这可以轻松的使用<strong><code>.catch</code></strong>刚发捕获该异常。</p>
     <pre><code class="language-js"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
@@ -451,7 +470,20 @@ handle().catch(<span class="hljs-function"><span class="hljs-keyword">function</
 });</code></pre>
     <h4>Applet应用的静默模式</h4>
     <p>handle函数执行时，发现中间件类型不符合预期，未开启静默模式的情况下，会触发 TypeError 异常，相反则忽略之。</p>
-    <p>在默认情况下，会将handle函数产出的的所有错误输出到 <strong>stderr</strong> 或者 <strong>控制台</strong>，除非handle函数的执行上下文属性 <code>silent</code> 为 <code>true</code>。</p>
+    <p>在默认情况下，会将handle函数产出的的所有错误输出到 <strong>stderr</strong> 或者 <strong>控制台</strong>，除非handle函数的执行上下文属性 <code>silent</code> 为 <code>true</code>。 </p>
+    <h4>事件接口处理异常</h4>
+    <p>一旦为我们的Applet应用实现了<a href="#event-emitter">事件接口</a>，那么我们就可以通过添加 <code>error</code> 事件捕获handle函数执行错误：</p>
+    <pre><code class="language-js"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Applet();
+
+<span class="hljs-comment">// 实现事件接口</span>
+app.on = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event, listener</span>) </span>{}
+app.listeners = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{}
+app.emit = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event, ...args</span>) </span>{}
+
+<span class="hljs-comment">// 捕获handle函数执行异常</span>
+app.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+  <span class="hljs-built_in">console</span>.error(err);
+});</code></pre>
   </article>
 </section>
 
