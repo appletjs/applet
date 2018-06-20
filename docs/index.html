@@ -26,7 +26,6 @@
       <a href="#context" title="上下文（Context）">上下文（Context）</a>
       <a href="#event-emitter" title="事件接口（EventEmitter）">事件接口（EventEmitter）</a>
       <a href="#exception" title="异常处理（Exception）">异常处理（Exception）</a>
-      <a href="#license" title="授权协议（License）">授权协议（License）</a>
       <div class="nav-main-divider"></div>
       <a href="#site-header">返回顶部（Go to top）</a>
     </nav>
@@ -331,8 +330,8 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
 <section id="event-emitter" title="事件接口（EventEmitter）">
   <article>
     <h2>事件接口（EventEmitter）</h2>
-    <p>Applet应用预留了三个事件触发接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式。
-    参阅 <a href="#exception">Exception</a> 获取更多信息.</p>
+    <p>Applet应用预留了三个事件接口，<strong>需要我们自己实现</strong>，它直接影响到 Applet 的默认错误处理方式。
+    参阅 <a href="#exception">Exception</a> 获取更多信息。</p>
     <ul>
     <li>listeners(event) 返回事件侦听器列表<ul>
     <li><code>{string|symbol} event</code> 事件名称</li>
@@ -349,7 +348,7 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
     <ul>
     <li>emit(event, ...args): boolean 触发事件，返回值表示是事件否被触发<ul>
     <li><code>{string|symbol} event</code> 事件名称</li>
-    <li><code>{any[]} args</code> 传递个侦听器的参数列表</li>
+    <li><code>{any[]} args</code> 传递给侦听器的参数列表</li>
     </ul>
     </li>
     </ul>
@@ -357,7 +356,7 @@ app.use(<span class="hljs-keyword">async</span> <span class="hljs-function"><spa
     <p>上述接口是完全根据 Node.js 的 events 模块的接口设计的。 </p>
     </blockquote>
     <h4>示例：Node.js 环境下</h4>
-    <pre><code class="language-js"><span class="hljs-comment">// 使用 events 模块</span>
+    <pre><code class="language-js"><span class="hljs-comment">// 使用 events 模块实现事件接口</span>
 <span class="hljs-keyword">const</span> EventEmitter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>);
 <span class="hljs-keyword">const</span> Applet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'applet'</span>);
 
@@ -489,7 +488,7 @@ app.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><sp
   </article>
 </section>
 
-<footer id="license" title="授权协议（License）">
+<footer id="" title="">
   <article>
     <h2>授权协议（License）</h2>
     <p>MIT © 2018, <a href="mailto:japplet@163.com" title="japplet@163.com">Maofeng Zhang</a></p>

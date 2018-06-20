@@ -99,9 +99,10 @@ sources.map(function (file, i) {
         return '    ' + line;
       }).join('\n');
 
+      const link = links[i - 1];
       const tag = i === 0 ? 'header' : i === sources.length - 1 ? 'footer' : 'section';
-      const id = ' id="' + (i > 0 ? links[i-1].id : 'site-header') + '"';
-      const title = ' title="' + (i > 0 ? links[i-1].text : '') + '"';
+      const id = ' id="' + (i > 0 ? (link ? link.id : '') : 'site-header') + '"';
+      const title = ' title="' + (i > 0 ? (link ? link.text : '') : '') + '"';
 
       partials.push(
         '<' + tag + id + title + '>\n' +
