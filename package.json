@@ -1,6 +1,6 @@
 {
   "name": "applet",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A very small and expressive middleware framework",
   "main": "index.js",
   "jsnext:main": "src/applet.js",

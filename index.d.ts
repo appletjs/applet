@@ -42,4 +42,5 @@ declare namespace Applet {
   const App = Applet;
 }
 
+export as namespace Applet;
 export = Applet;
